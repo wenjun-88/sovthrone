@@ -1,26 +1,40 @@
 <template>
-  <div class="login">
-    <div>
-      <form @submit.prevent="submit">
-        <div class="form-group row">
-          <div class="col-sm-2 m-auto">
-            <label for="email">Email:</label>
-          </div>
-          <div class="col-sm-10">
-            <input type="text" name="email" v-model="form.email" />
+  <div class="justify-content-center p-5" style="z-index: 999">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="m-5">
+          <div class="login">
+            <div class="d-flex justify-content-center w-100 text-center">
+              <form @submit.prevent="submit" class="w-100">
+                <div class="">
+                  <div class="form-group row">
+                  <div class="col-sm-2 m-auto">
+                    <label for="email">Email:</label>
+                  </div>
+                  <div class="col-sm-10">
+                    <input type="text" name="email" v-model="form.email" />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-2 m-auto">
+                    <label for="password">Password:</label>
+                  </div>
+                  <div class="col-sm-10">
+                    <input
+                      type="password"
+                      name="password"
+                      v-model="form.password"
+                    />
+                  </div>
+                </div>
+                </div>
+                <button type="submit">Submit</button>
+              </form>
+              <p v-if="showError" id="error">Email or Password is incorrect</p>
+            </div>
           </div>
         </div>
-        <div class="form-group row">
-          <div class="col-sm-2 m-auto">
-            <label for="password">Password:</label>
-          </div>
-          <div class="col-sm-10">
-            <input type="password" name="password" v-model="form.password" />
-          </div>
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-      <p v-if="showError" id="error">Email or Password is incorrect</p>
+      </div>
     </div>
   </div>
 </template>
@@ -52,7 +66,6 @@ export default {
       } catch (error) {
         this.showError = true;
       }
-
     },
   },
 };
@@ -69,6 +82,9 @@ button[type="submit"] {
   font-weight: 900;
   width: 30%;
   padding: 12px 0px;
+  display: flex;
+  justify-content: center;
+  margin: auto;
 }
 button[type="submit"]:hover {
   background-color: #45a049;

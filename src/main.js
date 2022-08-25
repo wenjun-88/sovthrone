@@ -9,6 +9,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import "@/assets/css/messenger.scss";
+import './registerServiceWorker'
+import vuetify from './plugins/vuetify'
+import Vuetify from 'vuetify'
 
 window.Pusher = Pusher;
 // Enable pusher logging - don't include this in production
@@ -22,9 +25,11 @@ axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
+Vue.use(Vuetify);
 Vue.config.productionTip = false
 new Vue({
   store,
   router,
+  vuetify,
   render: h => h(App)
 }).$mount('#app')
