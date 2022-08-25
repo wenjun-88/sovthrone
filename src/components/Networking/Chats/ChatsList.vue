@@ -1,12 +1,10 @@
 <template>
   <div class="userlist">
-    <!-- {{chatRoomList}} -->
     <template v-for="chatRoomID in chatRoomList">
-      <!-- {{chatRoomID.id}} -->
       <user-item
         v-if="getProfile(chatRoomID)"
         :key="chatRoomID.id"
-        :source="chatRoomID.id"
+        :source="chatRoomID"
         :userUUID="getProfile(chatRoomID)"
         :active="GET_CURRENT_CHAT_ROOM_UUID == chatRoomID.id"
         :name="getProfileDisplayName(chatRoomID)"
@@ -30,13 +28,6 @@ export default {
       chatRoomList: null,
     };
   },
-  computed: {
-    ...mapGetters("messenger", [
-      "GET_CURRENT_USER_UUID",
-      "GET_CURRENT_CHAT_ROOM_UUID",
-      "GET_DESTINATED_CHATROOM_UUID",
-    ]),
-  },
   methods: {
     ...mapMutations("messenger", [
       "UPDATE_CURRENT_CHAT_ROOM_UUID",
@@ -45,26 +36,6 @@ export default {
       "TOGGLE_LOADING_CHAT",
     ]),
     ...mapActions("messenger", ["GET_MESSAGES", "SCROLL_TO_BOTTOM"]),
-    getChatRoomModel: function (uuid) {
-      // console.log(OneTwoEngage.Models.ChatRoom.query().with('target.profile').find(uuid));
-      console.log(uuid)
-      var output = '';
-      axios
-      .get(
-        `/chatRoom/${uuid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${this.$store.getters.StateUser}`,
-          },
-        }
-      )
-      .then((res) => {
-        output = res.data;
-      });
-        console.log(output)
-
-      return output;
-    },
     getProfile(uuid) {
       if (uuid.target[0]) {
         return uuid.target[0].id;
@@ -80,15 +51,30 @@ export default {
     },
     getChatRoomByUUID: function (chatRoomUUID, userUUID) {
       this.UPDATE_CURRENT_CHAT_ROOM_UUID(chatRoomUUID);
-      this.UPDATE_CURRENT_USER_UUID(userUUID);
-      console.log(this.GET_MESSAGES(chatRoomUUID));
-      this.TOGGLE_CHAT_TAB("Messenger");
-      this.GET_MESSAGES(chatRoomUUID);
-      window.localStorage.setItem("lastChatUser", userUUID);
-      this.unread = false;
-      setTimeout(() => {
-        this.SCROLL_TO_BOTTOM();
-      }, 100);
+      console.log(chatRoomUUID);
+      this.UPDATE_CURRENT_USER_UUID(userUUID)
+      console.log(userUUID);
+      console.log(this.GET_CURRENT_USER_UUID);
+      this.TOGGLE_CHAT_TAB('Messenger')
+      axios
+        .post(
+          `/chatRoom/private/target`,
+          { user_uuid: this.GET_CURRENT_USER_UUID },
+          {
+            headers: {
+              Authorization: `Bearer ${this.$store.getters.StateUser.access_token}`
+            },
+          }
+        )
+        .then((result) => {
+          this.UPDATE_CURRENT_CHAT_ROOM_UUID(result.data.id);
+          this.GET_MESSAGES(result.data);
+        })
+      window.localStorage.setItem("lastChatUser", userUUID)
+      this.unread = false
+      setTimeout(()=>{
+        this.SCROLL_TO_BOTTOM()
+      },100)
     },
   },
   mounted() {
@@ -98,13 +84,21 @@ export default {
         `/chatRoom/private`,
         {
           headers: {
-            Authorization: `Bearer ${this.$store.getters.StateUser}`,
+            Authorization: `Bearer ${this.$store.getters.StateUser.access_token}`,
           },
         }
       )
       .then((res) => {
+        console.log(res)
         this.chatRoomList = res.data.data;
       });
-  }
+  },
+  computed: {
+    ...mapGetters("messenger", [
+      "GET_CURRENT_USER_UUID",
+      "GET_CURRENT_CHAT_ROOM_UUID",
+      "GET_DESTINATED_CHATROOM_UUID",
+    ]),
+  },
 };
 </script>

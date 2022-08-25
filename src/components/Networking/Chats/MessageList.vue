@@ -22,7 +22,7 @@
       :estimate-size="recordTotal"
       :keeps="recordTotal"
       :recordTotal="recordTotal"
-      :extra-props="{ self: GET_CURRENT_USER_UUID.id }"
+      :extra-props="{ self: GET_CURRENT_USER_UUID }"
     ></virtual-list>
   </div>
 </template>
@@ -45,20 +45,6 @@ export default {
       recordTotal: null,
       access: this.$store.getters.StateUser,
     };
-  },
-  computed: {
-    ...mapGetters("messenger", [
-      "GET_CURRENT_USER_UUID",
-      "GET_CURRENT_CHAT_ROOM_UUID",
-      // 'GET_LOCAL_MESSAGES'
-    ]),
-  },
-  watch: {
-    activeChatRoomMessages() {
-      console.log("wow");
-      this.getMessages();
-      this.SCROLL_TO_BOTTOM();
-    },
   },
   mounted() {
     this.getMessages();
@@ -88,7 +74,6 @@ export default {
     });
   },
   methods: {
-    ...mapMutations("messenger", ["DELETE_PENDING_MESSAGES"]),
     ...mapActions("messenger", ["SCROLL_TO_BOTTOM", "GET_MESSAGES"]),
     setVirtualListToBottom() {
       if (this.$refs.vsl) {
@@ -98,12 +83,40 @@ export default {
     getMessages() {
       axios
         .get(`/chatRoom/${this.GET_CURRENT_CHAT_ROOM_UUID}/messages`, {
-          headers: { Authorization: `Bearer ${this.$store.getters.StateUser}` },
+          headers: { Authorization: `Bearer ${this.$store.getters.StateUser.access_token}` },
         })
         .then((res) => {
           this.activeChatRoomMessages = res.data.data;
           this.recordTotal = res.data.recordsTotal;
         });
+    }
+  },
+  computed: {
+    ...mapGetters("messenger", [
+      "GET_CURRENT_USER_UUID",
+      "GET_CURRENT_CHAT_ROOM_UUID",
+      // 'GET_LOCAL_MESSAGES'
+    ]),
+    activeChatRoomMessages() {
+      if (this.GET_CURRENT_CHAT_ROOM_UUID) {
+        console.log("computed here")
+        axios
+        .get(`/chatRoom/${this.GET_CURRENT_CHAT_ROOM_UUID}/messages`, {
+          headers: { Authorization: `Bearer ${this.$store.getters.StateUser.access_token}` },
+        })
+        .then((res) => {
+          this.activeChatRoomMessages = res.data.data;
+          this.recordTotal = res.data.recordsTotal;
+        });
+      } else {
+        return []
+      }
+    },
+  },
+  watch: {
+    activeChatRoomMessages: function(){
+      this.getMessages();
+      // this.SCROLL_TO_BOTTOM();
     },
   },
 };

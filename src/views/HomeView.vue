@@ -38,7 +38,7 @@ import axios from 'axios';
 
     mounted() {
       axios.get('/list/questions',
-        { headers: {"Authorization" : `Bearer ${this.$store.getters.StateUser}`} }
+        { headers: {"Authorization" : `Bearer ${this.$store.getters.StateUser.access_token}`} }
       ).then((res) => {
         this.questions = res.data
       })
@@ -49,4 +49,3 @@ import axios from 'axios';
     },
   }
 </script>
-

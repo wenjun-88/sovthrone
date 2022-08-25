@@ -3,7 +3,7 @@
   class="user"
   :class="{active: active}"
   v-if="getChatRoomModel"
-  @click="getChatRoomByUUID(source,userUUID)">
+  @click="getChatRoomByUUID(source.id,userUUID)">
     <div
     v-if="unread"
     class="unread"></div>
@@ -47,14 +47,13 @@ export default {
   ],
   mounted() {
     // console.log(this.profile);
-    console.log(this.userUUID);
+    // console.log(this.userUUID);
     if ( window.localStorage.getItem(this.source) !=  this.getChatRoomModel().last_message_id) {
       this.unread = true
     }
 
-    this.intervalCheck = setInterval(()=>{
-
-      if (this.GET_CURRENT_CHAT_ROOM_UUID != this.source && this.getLastMsgSenderUUID() == this.userUUID) {
+    // this.intervalCheck = setInterval(()=>{
+      if (this.GET_CURRENT_CHAT_ROOM_UUID != this.source.id && this.getLastMsgSenderUUID() == this.userUUID) {
         if (this.getLastMsgAt() != window.localStorage.getItem(this.source)) {
           this.unread = true
         } else {
@@ -65,7 +64,7 @@ export default {
       if (this.active) {
         this.unread = false
       }
-    }, Math.floor((Math.random() * 1000) + 500))
+    // }, Math.floor((Math.random() * 1000) + 500))
 
   },
   beforeDestroy() {
@@ -78,16 +77,6 @@ export default {
       'GET_DESTINATED_CHATROOM_UUID'
     ])
 
-    // getChatRoomModel: function () {
-    //   return OneTwoEngage.Models.ChatRoom.query().find(this.source) || false
-    // },
-    // getLastMsgAt() {
-    //   if (this.getChatRoomModel) {
-    //     return this.getChatRoomModel.last_message_id
-    //   } else {
-    //     return false
-    //   }
-    // },
   },
   methods: {
     ...mapMutations('messenger',[
@@ -101,10 +90,10 @@ export default {
       var output = '';
       axios
       .get(
-        `/chatRoom/${this.source}`,
+        `/chatRoom/${this.source.id}`,
         {
           headers: {
-            Authorization: `Bearer ${this.$store.getters.StateUser}`,
+            Authorization: `Bearer ${this.$store.getters.StateUser.access_token}`,
           },
         }
       )
@@ -118,10 +107,10 @@ export default {
       if (this.source) {
         axios
       .get(
-        `/chatRoom/${this.source}`,
+        `/chatRoom/${this.source.id}`,
         {
           headers: {
-            Authorization: `Bearer ${this.$store.getters.StateUser}`,
+            Authorization: `Bearer ${this.$store.getters.StateUser.access_token}`,
           },
         }
       )
@@ -136,10 +125,10 @@ export default {
       if (this.source) {
         axios
       .get(
-        `/chatRoom/${this.source}`,
+        `/chatRoom/${this.source.id}`,
         {
           headers: {
-            Authorization: `Bearer ${this.$store.getters.StateUser}`,
+            Authorization: `Bearer ${this.$store.getters.StateUser.access_token}`,
           },
         }
       )

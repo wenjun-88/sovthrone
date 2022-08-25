@@ -62,15 +62,16 @@ export default {
       "SWITCH_TAB",
     ]),
     getChatRoomByUser: function (user) {
-      this.UPDATE_CURRENT_USER_UUID(user);
+      this.UPDATE_CURRENT_USER_UUID(user.id);
       window.localStorage.setItem("lastChatUser", user);
+      console.log(this.$store.getters.StateUser.access_token)
       axios
         .post(
           `/chatRoom/private/target`,
           { user_uuid: user.id },
           {
             headers: {
-              Authorization: `Bearer ${this.$store.getters.StateUser}`
+              Authorization: `Bearer ${this.$store.getters.StateUser.access_token}`
             },
           }
         )

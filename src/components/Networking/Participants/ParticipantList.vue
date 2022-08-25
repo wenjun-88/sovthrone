@@ -61,15 +61,15 @@ export default {
       );
     },
     chooseUserProfile(useruuid) {
-      this.UPDATE_CURRENT_USER_UUID(useruuid);
-      this.TOGGLE_PARTICIPANT_TAB("Profile");
+      // this.UPDATE_CURRENT_USER_UUID(useruuid);
+      // this.TOGGLE_PARTICIPANT_TAB("Profile");
       this.TOGGLE_CHAT_TAB("Messenger");
     },
   },
    mounted() {
       axios
         .get(`/chatRoom/participants`, {
-          headers: { Authorization: `Bearer ${this.$store.getters.StateUser}` },
+          headers: { Authorization: `Bearer ${this.$store.getters.StateUser.access_token}` },
         })
         .then((res) => {
           this.participantList = res.data.data;

@@ -13,7 +13,7 @@ const actions = {
         await axios.post('login', User)
           .then(res => {
             commit('setUser',{
-              access_token: res.data.access_token
+              data: res.data
             })
           });
       },
@@ -26,7 +26,7 @@ const actions = {
 };
 const mutations = {
     setUser(state, userData){
-        state.user = userData.access_token
+        state.user = userData.data
     },
     LogOut(state){
         state.user = null

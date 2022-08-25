@@ -46,6 +46,7 @@ const messenger = {
       return state.participantsTab
     },
     GET_CURRENT_CHAT_ROOM_UUID(state) {
+      console.log(state)
       return state.currentChatroomUUID
     },
     GET_CURRENT_USER_UUID(state) {
@@ -80,7 +81,6 @@ const messenger = {
       state.currentChatroomUUID = data
     },
     UPDATE_CURRENT_USER_UUID(state, data) {
-      console.log(data)
       state.currentUserUUID = data
     },
     UPDATE_INPUT(state, value) {
@@ -106,18 +106,20 @@ const messenger = {
         if (tab == 'Chats') {
           if (this.state.auth.user) {
             axios.interceptors.request.use(config => {
-              config.headers['Authorization'] = `Bearer ${this.state.auth.user}`;
+              config.headers['Authorization'] = `Bearer ${this.state.auth.user.access_token}`;
               return config;
             });
           }
           axios.get(`/chatRoom/private`).then((res) => {
+            console.log(res);
             this.dispatch('messenger/GET_PRIVATE_CHATROOM_LIST')
             this.state.messenger.loading = false
           })
         } else if (tab == 'Participants') {
+          console.log(this.state.auth.user)
           if (this.state.auth.user) {
             axios.interceptors.request.use(config => {
-              config.headers['Authorization'] = `Bearer ${this.state.auth.user}`;
+              config.headers['Authorization'] = `Bearer ${this.state.auth.user.access_token}`;
               return config;
             });
           }
@@ -153,12 +155,12 @@ const messenger = {
     GET_PRIVATE_CHATROOM_LIST() {
       if (this.state.auth.user) {
         axios.interceptors.request.use(config => {
-          config.headers['Authorization'] = `Bearer ${this.state.auth.user}`;
+          config.headers['Authorization'] = `Bearer ${this.state.auth.user.access_token}`;
           return config;
         });
       }
       axios.get(`/chatRoom/private`).then((res) => {
-        return res.data;
+        return res.data.data;
 
       })
     },
@@ -182,7 +184,7 @@ const messenger = {
 
       if (this.state.auth.user) {
         axios.interceptors.request.use(config => {
-          config.headers['Authorization'] = `Bearer ${this.state.auth.user}`;
+          config.headers['Authorization'] = `Bearer ${this.state.auth.user.access_token}`;
           return config;
         });
       }
@@ -217,12 +219,16 @@ const messenger = {
       }
       if (this.state.auth.user) {
         axios.interceptors.request.use(config => {
-          config.headers['Authorization'] = `Bearer ${this.state.auth.user}`;
+          config.headers['Authorization'] = `Bearer ${this.state.auth.user.access_token}`;
           return config;
         });
       }
-      console.log(uuid)
-      return axios.get(`/chatRoom/${uuid}/messages`).then(() => {
+      console.log(typeof uuid)
+      if(typeof uuid == 'object') {
+        uuid = uuid.id;
+      }
+      return axios.get(`/chatRoom/${uuid}/messages`).then((res) => {
+        console.log(res.data.data)
         this.dispatch('messenger/SCROLL_TO_BOTTOM')
         this.commit('messenger/TOGGLE_LOADING_CHAT', false)
       });
@@ -234,7 +240,7 @@ const messenger = {
       console.log(pendingMsgId);
       if (this.state.auth.user) {
         axios.interceptors.request.use(config => {
-          config.headers['Authorization'] = `Bearer ${this.state.auth.user}`;
+          config.headers['Authorization'] = `Bearer ${this.state.auth.user.access_token}`;
           return config;
         });
       }

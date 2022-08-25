@@ -1,5 +1,6 @@
 <template>
   <div
+  v-if="this.$store.getters.StateUser.user_id != this.source.id"
   class="user"
   @click="chooseUserProfile(source)"
   >
@@ -77,7 +78,7 @@ export default {
     //   return this.getProfile().avatar
     // },
     chooseUserProfile(useruuid) {
-      // this.UPDATE_CURRENT_USER_UUID(useruuid)
+      this.UPDATE_CURRENT_USER_UUID(useruuid)
       // this.TOGGLE_PARTICIPANT_TAB('Profile')
       // this.TOGGLE_CHAT_TAB('Messenger')
       this.$emit('chooseUserProfile',useruuid)
