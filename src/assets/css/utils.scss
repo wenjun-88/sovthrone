@@ -1,0 +1,76 @@
+@mixin bp($type, $width) {
+
+  @media screen and ($type: #{$width}px) {
+      @content;
+  }
+
+}
+
+@mixin fullscreen($zindex) {
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: $zindex;
+
+}
+
+@mixin clear {
+  &:before,
+  &:after {
+      content:' ';
+      display:table;
+  }
+
+  &:after {
+      clear:both;
+  }
+  *zoom:1;
+}
+
+@mixin vertical-align {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.row-full{
+ width: 100vw;
+ position: relative;
+ margin-left: -50vw;
+ left: 50%;
+}
+
+@mixin inner-scroll {
+  overflow-y: auto; /* has to be scroll, not auto */
+  -webkit-overflow-scrolling: touch;
+}
+
+@mixin desktop-limit {
+  .desktop & {
+      min-width: 1250px;
+      // min-height: 600px;
+  }
+  .tablet & {
+      min-width: 1024px;
+      // min-height: 600px;
+  }
+
+  &.desktop  {
+      min-width: 1250px;
+      // min-height: 600px;
+  }
+  &.tablet  {
+      min-width: 1024px;
+      // min-height: 600px;
+  }
+}
+
+@mixin grd1 {
+  background: #3900bd;
+  background: linear-gradient(90deg, #3900bd 0%, #401aff 100%);
+}
