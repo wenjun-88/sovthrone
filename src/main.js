@@ -12,6 +12,7 @@ import "@/assets/css/messenger.scss";
 import './registerServiceWorker'
 import vuetify from './plugins/vuetify'
 import Vuetify from 'vuetify'
+import register from './service-worker/register-service-worker'
 
 window.Pusher = Pusher;
 // Enable pusher logging - don't include this in production
@@ -33,3 +34,10 @@ new Vue({
   vuetify,
   render: h => h(App)
 }).$mount('#app')
+
+register()
+
+if (process.env.NODE_ENV === 'development' || process.env.VUE_APP_PWA_LOCAL_SERVE === 'true') {
+  console.log(`PWA Local Serve: ${process.env.VUE_APP_PWA_LOCAL_SERVE}`) // eslint-disable-line no-console
+  console.log(`Node Env: ${process.env.NODE_ENV}`) // eslint-disable-line no-console
+}
