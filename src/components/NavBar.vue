@@ -30,6 +30,7 @@ export default {
   position: absolute;
   right: 8%;
   top: 0;
+  z-index: 9999;
 }
 #nav a {
   font-weight: bold;
