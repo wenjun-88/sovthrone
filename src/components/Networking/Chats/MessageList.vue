@@ -48,7 +48,6 @@ export default {
   },
   mounted() {
     this.getMessages();
-    this.SCROLL_TO_BOTTOM();
     var access = this.access;
 
     var pusher = new Pusher("a512ce6f28510c640445", {
@@ -115,8 +114,12 @@ export default {
   },
   watch: {
     activeChatRoomMessages: function(){
-      this.getMessages();
-      // this.SCROLL_TO_BOTTOM();
+      if(this.activeChatRoomMessages == null) {
+        this.getMessages();
+      }
+      this.SCROLL_TO_BOTTOM();
+
+
     },
   },
 };
