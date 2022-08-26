@@ -114,9 +114,9 @@ export default {
   },
   watch: {
     activeChatRoomMessages: function(){
-      if(this.activeChatRoomMessages == null) {
+      // if(this.activeChatRoomMessages == null) {
         this.getMessages();
-      }
+      // }
       this.SCROLL_TO_BOTTOM();
 
 
